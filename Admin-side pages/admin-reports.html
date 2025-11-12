@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #555;
+        }
+
+        .admin-info {
+            background: #666;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem 0;
+        }
+
+        .report-categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .report-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 4px solid #007bff;
+        }
+
+        .report-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .report-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-options {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .report-options li {
+            padding: 0.5rem 0;
+            color: #555;
+            border-bottom: 1px solid #eee;
+        }
+
+        .report-options li:last-child {
+            border-bottom: none;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-weight: bold;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .quick-reports {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .quick-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #007bff;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .recent-reports {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .reports-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .reports-table th,
+        .reports-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        .reports-table th {
+            background: #f8f9fa;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .reports-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-failed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .custom-report {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin: 2rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .report-categories {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-stats {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .reports-table {
+                font-size: 0.9rem;
+            }
+
+            .reports-table th,
+            .reports-table td {
+                padding: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .report-card,
+            .quick-reports,
+            .recent-reports,
+            .custom-report {
+                padding: 1rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo"> Admin Panel</div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-students.html">Manage Students</a></li>
+                <li><a href="admin-teachers.html">Manage Teachers</a></li>
+                <li><a href="admin-courses.html">Manage Courses</a></li>
+                <li><a href="admin-reports.html" class="active">Reports</a></li>
+            </ul>
+            <div class="admin-info">Admin: Abhiraj Jadeja</div>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Reports & Analytics</h1>
+            <p>Generate comprehensive reports and view system analytics</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div class="quick-reports">
+                <h2>Quick Statistics</h2>
+                <div class="quick-stats">
+                    <div class="stat-box">
+                        <div class="stat-number">1,245</div>
+                        <div class="stat-label">Total Students</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">87</div>
+                        <div class="stat-label">Active Teachers</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">45</div>
+                        <div class="stat-label">Running Courses</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">94%</div>
+                        <div class="stat-label">Attendance Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="report-categories">
+                <div class="report-card">
+                    <h3>📊 Student Reports</h3>
+                    <p>Generate detailed reports about student performance and attendance</p>
+                    <ul class="report-options">
+                        <li>• Student Enrollment Report</li>
+                        <li>• Attendance Summary</li>
+                        <li>• Grade Distribution</li>
+                        <li>• Student Performance Analysis</li>
+                    </ul>
+                    <button class="btn btn-success">Generate Student Report</button>
+                    <button class="btn">View Samples</button>
+                </div>
+
+                <div class="report-card">
+                    <h3>👩‍🏫 Teacher Reports</h3>
+                    <p>Analyze teacher performance, workload, and course assignments</p>
+                    <ul class="report-options">
+                        <li>• Teacher Workload Analysis</li>
+                        <li>• Course Assignment Report</li>
+                        <li>• Performance Evaluation</li>
+                        <li>• Salary & Benefits Summary</li>
+                    </ul>
+                    <button class="btn btn-success">Generate Teacher Report</button>
+                    <button class="btn">View Samples</button>
+                </div>
+
+                <div class="report-card">
+                    <h3>📚 Course Reports</h3>
+                    <p>Track course enrollment, completion rates, and effectiveness</p>
+                    <ul class="report-options">
+                        <li>• Course Enrollment Statistics</li>
+                        <li>• Completion Rate Analysis</li>
+                        <li>• Course Effectiveness Report</li>
+                        <li>• Resource Utilization</li>
+                    </ul>
+                    <button class="btn btn-success">Generate Course Report</button>
+                    <button class="btn">View Samples</button>
+                </div>
+
+                <div class="report-card">
+                    <h3>💰 Financial Reports</h3>
+                    <p>Monitor school finances, fee collection, and budget analysis</p>
+                    <ul class="report-options">
+                        <li>• Fee Collection Report</li>
+                        <li>• Budget vs Actual Expenses</li>
+                        <li>• Revenue Analysis</li>
+                        <li>• Outstanding Payments</li>
+                    </ul>
+                    <button class="btn btn-success">Generate Financial Report</button>
+                    <button class="btn">View Samples</button>
+                </div>
+            </div>
+
+                                         
+                
+        
+                    
+                </div>
+                
+
+            
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

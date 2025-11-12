@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Students - School Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #34495e;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem 0;
+        }
+
+        .actions {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .students-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #34495e;
+            color: white;
+            font-weight: bold;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #d68910;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #e74c3c;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-group input.valid,
+        .form-group select.valid {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .form-group input.invalid,
+        .form-group select.invalid {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            background: #95a5a6;
+        }
+
+        .btn-cancel:hover {
+            background: #7f8c8d;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                margin-bottom: 1rem;
+            }
+
+            .students-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 600px;
+            }
+
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .btn-small {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+
+            .modal-content {
+                margin: 10% 5%;
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+
+            .actions {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 0.3rem;
+                font-size: 0.8rem;
+            }
+
+            .modal-content {
+                margin: 5%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">EduTrack</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="students.html" class="active">Students</a></li>
+                <li><a href="teachers.html">Teachers</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Student Management</h1>
+            <p>Manage all student records</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div id="alertBox" class="alert"></div>
+
+            <div class="actions">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search students by name or ID...">
+                    <button class="btn" onclick="searchStudents()">Search</button>
+                </div>
+                <button class="btn btn-success" onclick="openAddModal()">Add New Student</button>
+            </div>
+
+            <div class="students-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Class</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentTableBody">
+                        <!-- Student rows will be populated by JavaScript -->
+                    </tbody>
+                </table>
+                <div class="no-results" id="noResults">No students found</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Student Modal -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Student</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+
+            <form id="studentForm" novalidate>
+                <input type="hidden" id="studentIndex">
+
+                <div class="form-group">
+                    <label for="studentId">Student ID <span class="required">*</span></label>
+                    <input type="text" id="studentId" name="studentId" placeholder="Enter student ID (e.g., 101)">
+                    <span class="error-message" id="studentIdError"></span>
+                    <span class="success-message" id="studentIdSuccess">✓ Valid ID</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="studentName" name="studentName" placeholder="Enter full name">
+                    <span class="error-message" id="studentNameError"></span>
+                    <span class="success-message" id="studentNameSuccess">✓ Valid name</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="studentEmail" name="studentEmail" placeholder="student@example.com">
+                    <span class="error-message" id="studentEmailError"></span>
+                    <span class="success-message" id="studentEmailSuccess">✓ Valid email</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentPhone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="studentPhone" name="studentPhone" placeholder="+91 XXXXX XXXXX">
+                    <span class="error-message" id="studentPhoneError"></span>
+                    <span class="success-message" id="studentPhoneSuccess">✓ Valid phone</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="studentClass">Class <span class="required">*</span></label>
+                    <select id="studentClass" name="studentClass">
+                        <option value="">Select Class</option>
+                        <option value="Grade 9A">Grade 9A</option>
+                        <option value="Grade 9B">Grade 9B</option>
+                        <option value="Grade 9C">Grade 9C</option>
+                        <option value="Grade 10A">Grade 10A</option>
+                        <option value="Grade 10B">Grade 10B</option>
+                        <option value="Grade 10C">Grade 10C</option>
+                        <option value="Grade 11A">Grade 11A</option>
+                        <option value="Grade 11B">Grade 11B</option>
+                        <option value="Grade 11C">Grade 11C</option>
+                        <option value="Grade 12A">Grade 12A</option>
+                        <option value="Grade 12B">Grade 12B</option>
+                        <option value="Grade 12C">Grade 12C</option>
+                    </select>
+                    <span class="error-message" id="studentClassError"></span>
+                    <span class="success-message" id="studentClassSuccess">✓ Selected</span>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Save Student</button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample student data
+        let students = [
+            { id: '101', name: 'Daksharajsinh Jadeja', email: 'daksharajsinh.jadeja@gmail.com', phone: '+91 96969 63632', class: 'Grade 10A' },
+            { id: '102', name: 'Manthan Kasundra', email: 'manthan.patel@gmail.com', phone: '+91 98989 56565', class: 'Grade 11B' },
+            { id: '103', name: 'Khush Upadhyay', email: 'gamingkhush@gmail.com', phone: '+91 89895 23236', class: 'Grade 9C' },
+            { id: '104', name: 'Param Bhimani', email: 'parambhimani18@gmail.com', phone: '+91 78456 23569', class: 'Grade 12A' }
+        ];
+
+        let isEditMode = false;
+        let editIndex = -1;
+
+        // Initialize page
+        window.onload = function() {
+            renderStudents();
+            setupValidation();
+        };
+
+        // Render students table
+        function renderStudents(filteredStudents = students) {
+            const tbody = document.getElementById('studentTableBody');
+            const noResults = document.getElementById('noResults');
+            
+            tbody.innerHTML = '';
+
+            if (filteredStudents.length === 0) {
+                noResults.classList.add('show');
+                return;
+            } else {
+                noResults.classList.remove('show');
+            }
+
+            filteredStudents.forEach((student, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.id}</td>
+                    <td>${student.name}</td>
+                    <td>${student.email}</td>
+                    <td>${student.phone}</td>
+                    <td>${student.class}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-small" onclick="viewStudent(${students.indexOf(student)})">View</button>
+                        <button class="btn btn-warning btn-small" onclick="editStudent(${students.indexOf(student)})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteStudent(${students.indexOf(student)})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Search students
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                renderStudents();
+                return;
+            }
+
+            const filtered = students.filter(student =>
+                student.name.toLowerCase().includes(searchTerm) ||
+                student.id.toLowerCase().includes(searchTerm) ||
+                student.email.toLowerCase().includes(searchTerm)
+            );
+
+            renderStudents(filtered);
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                searchStudents();
+            }
+        });
+
+        // Open add modal
+        function openAddModal() {
+            isEditMode = false;
+            document.getElementById('modalTitle').textContent = 'Add New Student';
+            document.getElementById('studentForm').reset();
+            clearAllValidation();
+            document.getElementById('studentModal').classList.add('show');
+        }
+
+        // Open edit modal
+        function editStudent(index) {
+            isEditMode = true;
+            editIndex = index;
+            const student = students[index];
+
+            document.getElementById('modalTitle').textContent = 'Edit Student';
+            document.getElementById('studentIndex').value = index;
+            document.getElementById('studentId').value = student.id;
+            document.getElementById('studentName').value = student.name;
+            document.getElementById('studentEmail').value = student.email;
+            document.getElementById('studentPhone').value = student.phone;
+            document.getElementById('studentClass').value = student.class;
+
+            clearAllValidation();
+            document.getElementById('studentModal').classList.add('show');
+        }
+
+        // View student
+        function viewStudent(index) {
+            const student = students[index];
+            alert(`Student Details:\n\nID: ${student.id}\nName: ${student.name}\nEmail: ${student.email}\nPhone: ${student.phone}\nClass: ${student.class}`);
+        }
+
+        // Delete student
+        function deleteStudent(index) {
+            const student = students[index];
+            
+            if (confirm(`Are you sure you want to delete ${student.name}?\n\nThis action cannot be undone.`)) {
+                students.splice(index, 1);
+                renderStudents();
+                showAlert('Student deleted successfully!', 'success');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('studentModal').classList.remove('show');
+            document.getElementById('studentForm').reset();
+            clearAllValidation();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('studentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert show alert-' + type;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Validation functions
+        function showError(input, message) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            if (successElement) {
+                successElement.classList.remove('show');
+            }
+        }
+
+        function showSuccess(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('valid');
+            input.classList.remove('invalid');
+            errorElement.classList.remove('show');
+            
+            if (successElement) {
+                successElement.classList.add('show');
+            }
+        }
+
+        function clearValidation(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.remove('valid', 'invalid');
+            if (errorElement) errorElement.classList.remove('show');
+            if (successElement) successElement.classList.remove('show');
+        }
+
+        function clearAllValidation() {
+            const inputs = ['studentId', 'studentName', 'studentEmail', 'studentPhone', 'studentClass'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) clearValidation(input);
+            });
+        }
+
+        // Validate Student ID
+        function validateStudentId() {
+            const input = document.getElementById('studentId');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Student ID is required');
+                return false;
+            }
+
+            if (!/^\d{3,6}$/.test(value)) {
+                showError(input, 'Student ID must be 3-6 digits');
+                return false;
+            }
+
+            // Check for duplicate ID (except in edit mode)
+            const isDuplicate = students.some((student, index) => 
+                student.id === value && (!isEditMode || index !== editIndex)
+            );
+
+            if (isDuplicate) {
+                showError(input, 'This Student ID already exists');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Student Name
+        function validateStudentName() {
+            const input = document.getElementById('studentName');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Student name is required');
+                return false;
+            }
+
+            if (value.length < 3) {
+                showError(input, 'Name must be at least 3 characters');
+                return false;
+            }
+
+            if (value.length > 50) {
+                showError(input, 'Name must be less than 50 characters');
+                return false;
+            }
+
+            const nameRegex = /^[a-zA-Z\s]+$/;
+            if (!nameRegex.test(value)) {
+                showError(input, 'Name can only contain letters and spaces');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Email
+        function validateStudentEmail() {
+            const input = document.getElementById('studentEmail');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Email is required');
+                return false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError(input, 'Please enter a valid email address');
+                return false;
+            }
+
+            // Check for duplicate email (except in edit mode)
+            const isDuplicate = students.some((student, index) => 
+                student.email.toLowerCase() === value.toLowerCase() && (!isEditMode || index !== editIndex)
+            );
+
+            if (isDuplicate) {
+                showError(input, 'This email is already registered');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Phone
+        function validateStudentPhone() {
+            const input = document.getElementById('studentPhone');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Phone number is required');
+                return false;
+            }
+
+            const phoneDigits = value.replace(/\D/g, '');
+
+            if (phoneDigits.length !== 10) {
+                showError(input, 'Phone number must be exactly 10 digits');
+                return false;
+            }
+
+            if (phoneDigits[0] === '0' || phoneDigits[0] === '1') {
+                showError(input, 'Phone number must start with digits 2-9');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Class
+        function validateStudentClass() {
+            const input = document.getElementById('studentClass');
+            const value = input.value;
+
+            if (value === '') {
+                showError(input, 'Please select a class');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Setup validation
+        function setupValidation() {
+            const studentId = document.getElementById('studentId');
+            const studentName = document.getElementById('studentName');
+            const studentEmail = document.getElementById('studentEmail');
+            const studentPhone = document.getElementById('studentPhone');
+            const studentClass = document.getElementById('studentClass');
+
+            // Blur validation
+            studentId.addEventListener('blur', validateStudentId);
+            studentName.addEventListener('blur', validateStudentName);
+            studentEmail.addEventListener('blur', validateStudentEmail);
+            studentPhone.addEventListener('blur', validateStudentPhone);
+            studentClass.addEventListener('blur', validateStudentClass);
+
+            // Clear validation on input
+            studentId.addEventListener('input', () => clearValidation(studentId));
+            studentName.addEventListener('input', () => clearValidation(studentName));
+            studentEmail.addEventListener('input', () => clearValidation(studentEmail));
+            studentPhone.addEventListener('input', () => clearValidation(studentPhone));
+            studentClass.addEventListener('input', () => clearValidation(studentClass));
+
+            // Phone formatting
+            studentPhone.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                // Format as +91 XXXXX XXXXX
+                if (value.length > 5) {
+                    this.value = '+91 ' + value.substring(0, 5) + ' ' + value.substring(5);
+                } else if (value.length > 0) {
+                    this.value = '+91 ' + value;
+                } else {
+                    this.value = '';
+                }
+            });
+
+            // XSS prevention
+            const textInputs = [studentId, studentName, studentEmail, studentPhone];
+            textInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/<[^>]*>/g, '');
+                });
+            });
+        }
+
+        // Form submission
+        document.getElementById('studentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate all fields
+            const isIdValid = validateStudentId();
+            const isNameValid = validateStudentName();
+            const isEmailValid = validateStudentEmail();
+            const isPhoneValid = validateStudentPhone();
+            const isClassValid = validateStudentClass();
+
+            if (isIdValid && isNameValid && isEmailValid && isPhoneValid && isClassValid) {
+                const studentData = {
+                    id: document.getElementById('studentId').value.trim(),
+                    name: document.getElementById('studentName').value.trim(),
+                    email: document.getElementById('studentEmail').value.trim(),
+                    phone: document.getElementById('studentPhone').value.trim(),
+                    class: document.getElementById('studentClass').value
+                };
+
+                if (isEditMode) {
+                    students[editIndex] = studentData;
+                    showAlert('Student updated successfully!', 'success');
+                } else {
+                    students.push(studentData);
+                    showAlert('Student added successfully!', 'success');
+                }
+
+                renderStudents();
+                closeModal();
+            } else {
+                showAlert('Please fix all errors before submitting', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manage Teachers - Admin Panel</title>
+<style>
+/* ----- existing styles ----- */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;line-height:1.6;color:#333;background:#f5f5f5}
+.container{max-width:1200px;margin:0 auto;padding:0 20px}
+header{background:#333;color:#fff;padding:1rem 0}
+nav{display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.5rem;font-weight:bold}
+.nav-links{display:flex;list-style:none;gap:2rem}
+.nav-links a{color:white;text-decoration:none;padding:0.5rem 1rem;border-radius:4px;transition:background .3s}
+.nav-links a:hover,.nav-links a.active{background:#555}
+.admin-info{background:#666;color:white;padding:0.5rem 1rem;border-radius:4px;font-size:.9rem}
+.page-title{background:white;padding:2rem 0;text-align:center}
+.page-title h1{color:#333;margin-bottom:.5rem}
+.content{padding:2rem 0}
+.admin-actions{background:white;padding:2rem;border-radius:8px;margin-bottom:2rem;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+.action-bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:1rem}
+.search-filter{display:flex;gap:1rem;flex:1}
+.search-filter input,.search-filter select{padding:.8rem;border:1px solid #ddd;border-radius:4px;font-size:1rem}
+.search-filter input{flex:1;min-width:200px}
+.btn{background:#007bff;color:white;border:none;padding:.8rem 1.5rem;border-radius:4px;cursor:pointer;text-decoration:none;display:inline-block;transition:background .3s;font-weight:bold}
+.btn:hover{background:#0056b3}
+.btn-success{background:#28a745}.btn-success:hover{background:#218838}
+.btn-danger{background:#dc3545}.btn-danger:hover{background:#c82333}
+.btn-warning{background:#ffc107;color:#212529}.btn-warning:hover{background:#e0a800}
+.teachers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.teacher-card{background:white;border-radius:8px;padding:1.5rem;box-shadow:0 2px 5px rgba(0,0,0,0.1);transition:transform .3s}
+.teacher-card:hover{transform:translateY(-2px);box-shadow:0 4px 10px rgba(0,0,0,0.15)}
+.teacher-header{text-align:center;margin-bottom:1rem}
+.teacher-avatar{width:80px;height:80px;background:#007bff;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:1.5rem;font-weight:bold;margin:0 auto 1rem}
+.teacher-name{color:#333;margin-bottom:.5rem}
+.teacher-subject{color:#666;font-style:italic}
+.teacher-info{margin:1rem 0}
+.info-item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid #eee}
+.info-label{font-weight:bold;color:#333}
+.teacher-actions{display:flex;gap:.5rem;justify-content:center;margin-top:1rem;flex-wrap:wrap}
+.btn-small{padding:.4rem .8rem;font-size:.9rem}
+.status-badge{padding:.3rem .8rem;border-radius:20px;font-size:.8rem;font-weight:bold}
+.status-active{background:#d4edda;color:#155724}
+.status-pending{background:#fff3cd;color:#856404}
+.status-inactive{background:#f8d7da;color:#721c24}
+footer{background:#333;color:white;text-align:center;padding:1.5rem 0;margin-top:2rem}
+/* modal */
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.6);justify-content:center;align-items:center}
+.modal-content{background:white;padding:2rem;border-radius:10px;width:90%;max-width:500px;position:relative;box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+.close-btn{position:absolute;top:10px;right:15px;font-size:1.5rem;color:#333;cursor:pointer}
+.modal-content h2{text-align:center;margin-bottom:1rem}
+.modal-content label{display:block;margin-top:1rem;font-weight:bold}
+.modal-content input,.modal-content select{width:100%;padding:0.7rem;margin-top:0.5rem;border:1px solid #ccc;border-radius:5px}
+/* responsive omitted for brevity */
+</style>
+</head>
+<body>
+<header>
+<nav class="container">
+<div class="logo">Admin Panel</div>
+<ul class="nav-links">
+<li><a href="admin-dashboard.html">Dashboard</a></li>
+<li><a href="admin-students.html">Manage Students</a></li>
+<li><a href="admin-teachers.html" class="active">Manage Teachers</a></li>
+<li><a href="admin-courses.html">Manage Courses</a></li>
+<li><a href="admin-reports.html">Reports</a></li>
+</ul>
+<div class="admin-info">Admin: Abhiraj Jadeja</div>
+</nav>
+</header>
+
+<section class="page-title">
+<div class="container">
+<h1>Manage Teachers</h1>
+<p>Complete teacher administration and management</p>
+</div>
+</section>
+
+<main class="content">
+<div class="container">
+<div class="admin-actions">
+<div class="action-bar">
+<div class="search-filter">
+<input type="text" placeholder="Search teachers by name or subject...">
+<select>
+<option value="">All Departments</option>
+<option>Mathematics</option><option>Science</option><option>English</option><option>History</option>
+</select>
+<select>
+<option value="">All Status</option>
+<option>Active</option><option>Pending</option><option>Inactive</option>
+</select>
+</div>
+<div>
+<button class="btn">Search</button>
+<button class="btn btn-success" onclick="openModal()">Add New Teacher</button>
+<button class="btn btn-warning">Import Teachers</button>
+</div>
+</div>
+</div>
+
+<div class="teachers-grid" id="teacherGrid">
+<!-- existing teacher cards -->
+<!-- you can keep your existing cards here unchanged -->
+</div>
+</div>
+</main>
+
+<footer>
+<div class="container">
+<p>&copy; 2025 EduTrack. All rights reserved.</p>
+</div>
+</footer>
+
+<!-- Modal for Adding Teacher -->
+<div class="modal" id="teacherModal">
+<div class="modal-content">
+<span class="close-btn" onclick="closeModal()">&times;</span>
+<h2>Add New Teacher</h2>
+<form id="teacherForm" onsubmit="return validateTeacherForm()">
+<label>Full Name</label>
+<input type="text" id="tname" placeholder="Enter full name">
+
+<label>Email</label>
+<input type="email" id="temail" placeholder="Enter email address">
+
+<label>Phone Number</label>
+<input type="text" id="tphone" placeholder="Enter phone number">
+
+<label>Subject</label>
+<input type="text" id="tsubject" placeholder="Enter subject">
+
+<label>Experience (in years)</label>
+<input type="number" id="texp" placeholder="Enter experience">
+
+<br><br>
+<button type="submit" class="btn btn-success" style="width:100%;">Add Teacher</button>
+</form>
+</div>
+</div>
+
+<script>
+function openModal(){document.getElementById('teacherModal').style.display='flex'}
+function closeModal(){document.getElementById('teacherModal').style.display='none';document.getElementById('teacherForm').reset()}
+
+function validateTeacherForm(){
+const name=document.getElementById('tname').value.trim();
+const email=document.getElementById('temail').value.trim();
+const phone=document.getElementById('tphone').value.trim();
+const subject=document.getElementById('tsubject').value.trim();
+const exp=document.getElementById('texp').value.trim();
+
+if(!name||!email||!phone||!subject||!exp){alert("All fields are required!");return false;}
+
+const emailPattern=/^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+const phonePattern=/^[0-9]{10}$/;
+
+if(!emailPattern.test(email)){alert("Enter a valid email!");return false;}
+if(!phonePattern.test(phone)){alert("Enter a valid 10-digit phone number!");return false;}
+if(isNaN(exp)||exp<=0){alert("Experience must be a positive number!");return false;}
+
+alert("Teacher added successfully!");
+closeModal();
+return false; // prevent actual form submit (demo)
+}
+</script>
+</body>
+</html>

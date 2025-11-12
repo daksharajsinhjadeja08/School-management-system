@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System - Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #34495e;
+        }
+
+        .hero {
+            background: white;
+            padding: 3rem 0;
+            text-align: center;
+        }
+
+        .hero h1 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #666;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            padding: 0.8rem 2rem;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .features {
+            padding: 3rem 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-box {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .feature-box h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        /* Contact Form Section */
+        .contact-section {
+            background: white;
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+
+        .contact-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #2c3e50;
+        }
+
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #f9f9f9;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-group input.valid,
+        .form-group select.valid,
+        .form-group textarea.valid {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .form-group input.invalid,
+        .form-group select.invalid,
+        .form-group textarea.invalid {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .submit-btn {
+            width: 100%;
+        }
+
+        .submit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .feature-box {
+                padding: 1.5rem;
+            }
+
+            .contact-form {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .hero {
+                padding: 2rem 0;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .features {
+                padding: 2rem 0;
+            }
+
+            .feature-box {
+                padding: 1rem;
+            }
+
+            .contact-form {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">EduTrack</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="teachers.html">Teachers</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Welcome to School Management System</h1>
+                <p>Manage students, teachers, and courses efficiently</p>
+                <a href="students.html" class="btn">Get Started</a>
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="container">
+                <h2>System Features</h2>
+                <div class="features-grid">
+                    <div class="feature-box">
+                        <h3>Student Management</h3>
+                        <p>Add, edit, and manage student records with ease</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>Teacher Management</h3>
+                        <p>Organize faculty information and assignments</p>
+                    </div>
+                    <div class="feature-box">
+                        <h3>Course Management</h3>
+                        <p>Handle course schedules and curriculum details</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact/Inquiry Form with Validation -->
+        <section class="contact-section">
+            <div class="container">
+                <h2>Send Us an Inquiry</h2>
+                
+                <form class="contact-form" id="inquiryForm" novalidate>
+                    <div id="alertBox" class="alert"></div>
+
+                    <!-- Full Name -->
+                    <div class="form-group">
+                        <label for="fullName">Full Name <span class="required">*</span></label>
+                        <input type="text" id="fullName" name="fullName" placeholder="Enter your full name">
+                        <span class="error-message" id="fullNameError"></span>
+                        <span class="success-message" id="fullNameSuccess">✓ Valid name</span>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="example@email.com">
+                        <span class="error-message" id="emailError"></span>
+                        <span class="success-message" id="emailSuccess">✓ Valid email</span>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label for="phone">Phone Number <span class="required">*</span></label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter 10-digit phone number">
+                        <span class="error-message" id="phoneError"></span>
+                        <span class="success-message" id="phoneSuccess">✓ Valid phone</span>
+                    </div>
+
+                    <!-- Inquiry Type -->
+                    <div class="form-group">
+                        <label for="inquiryType">Inquiry Type <span class="required">*</span></label>
+                        <select id="inquiryType" name="inquiryType">
+                            <option value="">Select Inquiry Type</option>
+                            <option value="admission">Admission Inquiry</option>
+                            <option value="general">General Information</option>
+                            <option value="complaint">Complaint</option>
+                            <option value="other">Other</option>
+                        </select>
+                        <span class="error-message" id="inquiryTypeError"></span>
+                        <span class="success-message" id="inquiryTypeSuccess">✓ Selected</span>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="form-group">
+                        <label for="message">Message <span class="required">*</span></label>
+                        <textarea id="message" name="message" rows="5" placeholder="Enter your message (minimum 10 characters)"></textarea>
+                        <span class="error-message" id="messageError"></span>
+                        <span class="success-message" id="messageSuccess">✓ Valid message</span>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn submit-btn">Submit Inquiry</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get form and input elements
+        const form = document.getElementById('inquiryForm');
+        const fullName = document.getElementById('fullName');
+        const email = document.getElementById('email');
+        const phone = document.getElementById('phone');
+        const inquiryType = document.getElementById('inquiryType');
+        const message = document.getElementById('message');
+        const alertBox = document.getElementById('alertBox');
+
+        // Validation functions
+        function showError(input, message) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            if (successElement) {
+                successElement.classList.remove('show');
+            }
+        }
+
+        function showSuccess(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('valid');
+            input.classList.remove('invalid');
+            errorElement.classList.remove('show');
+            
+            if (successElement) {
+                successElement.classList.add('show');
+            }
+        }
+
+        function clearValidation(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.remove('valid', 'invalid');
+            errorElement.classList.remove('show');
+            
+            if (successElement) {
+                successElement.classList.remove('show');
+            }
+        }
+
+        // Validate Full Name
+        function validateFullName() {
+            const value = fullName.value.trim();
+            
+            if (value === '') {
+                showError(fullName, 'Full name is required');
+                return false;
+            }
+            
+            if (value.length < 3) {
+                showError(fullName, 'Name must be at least 3 characters');
+                return false;
+            }
+            
+            if (value.length > 50) {
+                showError(fullName, 'Name must be less than 50 characters');
+                return false;
+            }
+            
+            // Check if name contains only letters and spaces
+            const nameRegex = /^[a-zA-Z\s]+$/;
+            if (!nameRegex.test(value)) {
+                showError(fullName, 'Name can only contain letters and spaces');
+                return false;
+            }
+            
+            showSuccess(fullName);
+            return true;
+        }
+
+        // Validate Email
+        function validateEmail() {
+            const value = email.value.trim();
+            
+            if (value === '') {
+                showError(email, 'Email is required');
+                return false;
+            }
+            
+            // Email regex pattern
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError(email, 'Please enter a valid email address');
+                return false;
+            }
+            
+            showSuccess(email);
+            return true;
+        }
+
+        // Validate Phone Number
+        function validatePhone() {
+            const value = phone.value.trim();
+            
+            if (value === '') {
+                showError(phone, 'Phone number is required');
+                return false;
+            }
+            
+            // Remove any non-digit characters
+            const phoneDigits = value.replace(/\D/g, '');
+            
+            if (phoneDigits.length !== 10) {
+                showError(phone, 'Phone number must be exactly 10 digits');
+                return false;
+            }
+            
+            // Check if phone starts with valid digit (not 0 or 1)
+            if (phoneDigits[0] === '0' || phoneDigits[0] === '1') {
+                showError(phone, 'Phone number must start with digits 2-9');
+                return false;
+            }
+            
+            showSuccess(phone);
+            return true;
+        }
+
+        // Validate Inquiry Type
+        function validateInquiryType() {
+            const value = inquiryType.value;
+            
+            if (value === '') {
+                showError(inquiryType, 'Please select an inquiry type');
+                return false;
+            }
+            
+            showSuccess(inquiryType);
+            return true;
+        }
+
+        // Validate Message
+        function validateMessage() {
+            const value = message.value.trim();
+            
+            if (value === '') {
+                showError(message, 'Message is required');
+                return false;
+            }
+            
+            if (value.length < 10) {
+                showError(message, 'Message must be at least 10 characters');
+                return false;
+            }
+            
+            if (value.length > 500) {
+                showError(message, 'Message must be less than 500 characters');
+                return false;
+            }
+            
+            showSuccess(message);
+            return true;
+        }
+
+        // Show alert message
+        function showAlert(message, type) {
+            alertBox.textContent = message;
+            alertBox.className = 'alert show alert-' + type;
+            
+            // Scroll to alert
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Hide alert after 5 seconds
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Real-time validation on blur
+        fullName.addEventListener('blur', validateFullName);
+        email.addEventListener('blur', validateEmail);
+        phone.addEventListener('blur', validatePhone);
+        inquiryType.addEventListener('blur', validateInquiryType);
+        message.addEventListener('blur', validateMessage);
+
+        // Clear validation on input
+        fullName.addEventListener('input', () => clearValidation(fullName));
+        email.addEventListener('input', () => clearValidation(email));
+        phone.addEventListener('input', () => clearValidation(phone));
+        inquiryType.addEventListener('input', () => clearValidation(inquiryType));
+        message.addEventListener('input', () => clearValidation(message));
+
+        // Form submission
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate all fields
+            const isNameValid = validateFullName();
+            const isEmailValid = validateEmail();
+            const isPhoneValid = validatePhone();
+            const isInquiryTypeValid = validateInquiryType();
+            const isMessageValid = validateMessage();
+            
+            // Check if all validations passed
+            if (isNameValid && isEmailValid && isPhoneValid && isInquiryTypeValid && isMessageValid) {
+                // Disable submit button
+                const submitBtn = form.querySelector('.submit-btn');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Submitting...';
+                
+                // Simulate form submission (you can replace this with actual AJAX call)
+                setTimeout(() => {
+                    showAlert('✓ Inquiry submitted successfully! We will contact you soon.', 'success');
+                    
+                    // Reset form
+                    form.reset();
+                    
+                    // Clear all validations
+                    clearValidation(fullName);
+                    clearValidation(email);
+                    clearValidation(phone);
+                    clearValidation(inquiryType);
+                    clearValidation(message);
+                    
+                    // Re-enable submit button
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Submit Inquiry';
+                }, 1500);
+            } else {
+                showAlert('✗ Please fix all errors before submitting', 'error');
+                
+                // Focus on first invalid field
+                if (!isNameValid) fullName.focus();
+                else if (!isEmailValid) email.focus();
+                else if (!isPhoneValid) phone.focus();
+                else if (!isInquiryTypeValid) inquiryType.focus();
+                else if (!isMessageValid) message.focus();
+            }
+        });
+
+        // Prevent form submission on Enter key in text inputs
+        form.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && e.target.type !== 'textarea') {
+                e.preventDefault();
+            }
+        });
+
+        // Input sanitization - prevent XSS
+        const textInputs = [fullName, email, phone, message];
+        textInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                // Remove any HTML tags
+                this.value = this.value.replace(/<[^>]*>/g, '');
+            });
+        });
+
+        // Phone number formatting - auto-format as user types
+        phone.addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, ''); // Remove non-digits
+            
+            if (value.length > 10) {
+                value = value.substring(0, 10);
+            }
+            
+            this.value = value;
+        });
+    </script>
+</body>
+</html>

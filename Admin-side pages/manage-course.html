@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Courses - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #555;
+        }
+
+        .admin-info {
+            background: #666;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem 0;
+        }
+
+        .admin-actions {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .search-filter input, .search-filter select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-filter input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .courses-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #666;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-draft {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .enrollment-count {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .courses-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .btn-small {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .admin-actions {
+                padding: 1rem;
+            }
+
+            th, td {
+                padding: 0.3rem;
+                font-size: 0.8rem;
+            }
+
+            table {
+                min-width: 750px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Admin Panel</div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-students.html">Manage Students</a></li>
+                <li><a href="admin-teachers.html">Manage Teachers</a></li>
+                <li><a href="admin-courses.html" class="active">Manage Courses</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+            </ul>
+            <div class="admin-info">Admin: Abhiraj Jadeja</div>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Manage Courses</h1>
+            <p>Complete course administration and management</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div class="admin-actions">
+                <div class="action-bar">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Search courses by name or code...">
+                        <select>
+                            <option value="">All Departments</option>
+                            <option value="math">Advanced Mathematics</option>
+                            <option value="science">Physics Fundamentals</option>
+                            <option value="science">Organic Chemistry</option>
+                            <option value="english">English Literature</option>
+                            <option value="history">History</option>
+                        </select>
+                        <select>
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                            <option value="draft">Draft</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button class="btn">Search</button>
+                        <button class="btn btn-success">Create New Course</button>
+                        <button class="btn btn-warning">Import Courses</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="courses-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Teacher</th>
+                            <th>Department</th>
+                            <th>Duration</th>
+                            <th>Students</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MATH101</td>
+                            <td>Advanced Mathematics</td>
+                            <td>Shweta Ramani</td>
+                            <td>Mathematics</td>
+                            <td>1 Semester</td>
+                            <td><span class="enrollment-count">25/30</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-small">Students</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ENG102</td>
+                            <td>English Literature</td>
+                            <td>Drashti Chovatiya</td>
+                            <td>English</td>
+                            <td>1 Year</td>
+                            <td><span class="enrollment-count">30/35</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-small">Students</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>PHY103</td>
+                            <td>Physics Fundamentals</td>
+                            <td>Ajay Pachani</td>
+                            <td>Science</td>
+                            <td>1 Semester</td>
+                            <td><span class="enrollment-count">22/28</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-small">Students</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>CHEM104</td>
+                            <td>Organic Chemistry</td>
+                            <td>Kishan Mavani</td>
+                            <td>Science</td>
+                            <td>1 Semester</td>
+                            <td><span class="enrollment-count">18/25</span></td>
+                            <td><span class="status-badge status-inactive">Inactive</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-success btn-small">Activate</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>BIO105</td>
+                            <td>Biology Basics</td>
+                            <td>Bhargav Thesiya</td>
+                            <td>Science</td>
+                            <td>1 Year</td>
+                            <td><span class="enrollment-count">28/30</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-small">Students</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>HIST106</td>
+                            <td>History</td>
+                            <td>Hetal Siyara</td>
+<td>Science</td>
+<td> 2 Year</td>
+<td><span class="enrollment-count">28/30</span></td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-small">Students</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+</table>
+</div>
+</main>
+<footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

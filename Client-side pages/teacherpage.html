@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teachers - School Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #34495e;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem 0;
+        }
+
+        .actions {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .teachers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .teacher-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .teacher-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .teacher-header {
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .teacher-avatar {
+            width: 80px;
+            height: 80px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .teacher-name {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .teacher-subject {
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        .teacher-info {
+            margin: 1rem 0;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #34495e;
+        }
+
+        .teacher-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+        }
+
+        .btn-warning:hover {
+            background: #d68910;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            overflow: auto;
+        }
+
+        .modal.show {
+            display: block;
+        }
+
+        .modal-content {
+            background: white;
+            margin: 3% auto;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 600px;
+            position: relative;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+
+        .modal-header h2 {
+            color: #2c3e50;
+        }
+
+        .close {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #e74c3c;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .required {
+            color: #e74c3c;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-group input.valid,
+        .form-group select.valid {
+            border-color: #27ae60;
+            background: #f0fff4;
+        }
+
+        .form-group input.invalid,
+        .form-group select.invalid {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .success-message {
+            color: #27ae60;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn-cancel {
+            background: #95a5a6;
+        }
+
+        .btn-cancel:hover {
+            background: #7f8c8d;
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #999;
+            background: white;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .no-results.show {
+            display: block;
+        }
+
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .nav-links a {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.9rem;
+            }
+
+            .search-box {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-box input {
+                margin-bottom: 1rem;
+            }
+
+            .teachers-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                gap: 1rem;
+            }
+
+            .teacher-card {
+                padding: 1rem;
+            }
+
+            .teacher-avatar {
+                width: 60px;
+                height: 60px;
+                font-size: 1.2rem;
+            }
+
+            .modal-content {
+                margin: 10% 5%;
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title h1 {
+                font-size: 1.8rem;
+            }
+
+            .container {
+                padding: 0 10px;
+            }
+
+            .actions {
+                padding: 1rem;
+            }
+
+            .teachers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .teacher-actions {
+                flex-direction: column;
+                gap: 0.3rem;
+            }
+
+            .btn-small {
+                padding: 0.5rem;
+            }
+
+            .modal-content {
+                margin: 5%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">EduTrack</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="teachers.html" class="active">Teachers</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Teacher Management</h1>
+            <p>Manage all faculty members</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div id="alertBox" class="alert"></div>
+
+            <div class="actions">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Search teachers by name or subject...">
+                    <button class="btn" onclick="searchTeachers()">Search</button>
+                </div>
+                <button class="btn btn-success" onclick="openAddModal()">Add New Teacher</button>
+            </div>
+
+            <div class="teachers-grid" id="teachersGrid">
+                <!-- Teacher cards will be populated by JavaScript -->
+            </div>
+            <div class="no-results" id="noResults">No teachers found</div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Teacher Modal -->
+    <div id="teacherModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add New Teacher</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+
+            <form id="teacherForm" novalidate>
+                <input type="hidden" id="teacherIndex">
+
+                <div class="form-group">
+                    <label for="teacherId">Teacher ID <span class="required">*</span></label>
+                    <input type="text" id="teacherId" name="teacherId" placeholder="TCH001">
+                    <span class="error-message" id="teacherIdError"></span>
+                    <span class="success-message" id="teacherIdSuccess">✓ Valid ID</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherName">Full Name <span class="required">*</span></label>
+                    <input type="text" id="teacherName" name="teacherName" placeholder="Enter full name">
+                    <span class="error-message" id="teacherNameError"></span>
+                    <span class="success-message" id="teacherNameSuccess">✓ Valid name</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherEmail">Email <span class="required">*</span></label>
+                    <input type="email" id="teacherEmail" name="teacherEmail" placeholder="teacher@edutrack.com">
+                    <span class="error-message" id="teacherEmailError"></span>
+                    <span class="success-message" id="teacherEmailSuccess">✓ Valid email</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherPhone">Phone Number <span class="required">*</span></label>
+                    <input type="tel" id="teacherPhone" name="teacherPhone" placeholder="+91 XXXXX XXXXX">
+                    <span class="error-message" id="teacherPhoneError"></span>
+                    <span class="success-message" id="teacherPhoneSuccess">✓ Valid phone</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherSubject">Subject <span class="required">*</span></label>
+                    <select id="teacherSubject" name="teacherSubject">
+                        <option value="">Select Subject</option>
+                        <option value="Mathematics">Mathematics</option>
+                        <option value="Physics">Physics</option>
+                        <option value="Chemistry">Chemistry</option>
+                        <option value="Biology">Biology</option>
+                        <option value="English Literature">English Literature</option>
+                        <option value="Hindi">Hindi</option>
+                        <option value="History">History</option>
+                        <option value="Geography">Geography</option>
+                        <option value="Computer Science">Computer Science</option>
+                        <option value="Physical Education">Physical Education</option>
+                    </select>
+                    <span class="error-message" id="teacherSubjectError"></span>
+                    <span class="success-message" id="teacherSubjectSuccess">✓ Selected</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="teacherExperience">Experience (Years) <span class="required">*</span></label>
+                    <input type="number" id="teacherExperience" name="teacherExperience" placeholder="Enter years of experience" min="0" max="50">
+                    <span class="error-message" id="teacherExperienceError"></span>
+                    <span class="success-message" id="teacherExperienceSuccess">✓ Valid</span>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-success">Save Teacher</button>
+                    <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Sample teacher data
+        let teachers = [
+            { id: 'TCH001', name: 'Shweta Ramani', email: 'shweta.ramani@edutrack.com', phone: '+91 99988 87776', subject: 'Mathematics', experience: 5 },
+            { id: 'TCH002', name: 'Drashti Chovatiya', email: 'drashti.chovatiya@edutrack.com', phone: '+91 98989 45455', subject: 'English Literature', experience: 3 },
+            { id: 'TCH003', name: 'Ajay Pachani', email: 'ajay.pachani@edutrack.com', phone: '+91 99999 99990', subject: 'Physics', experience: 5 },
+            { id: 'TCH004', name: 'Kishan Mavani', email: 'kishan.mavani@edutrack.com', phone: '+91 88888 55555', subject: 'Chemistry', experience: 6 },
+            { id: 'TCH005', name: 'Bhargav Thaker', email: 'bhargav.thaker@edutrack.com', phone: '+91 95978 56786', subject: 'Biology', experience: 5 }
+        ];
+
+        let isEditMode = false;
+        let editIndex = -1;
+
+        // Initialize page
+        window.onload = function() {
+            renderTeachers();
+            setupValidation();
+        };
+
+        // Get initials from name
+        function getInitials(name) {
+            return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        // Render teachers grid
+        function renderTeachers(filteredTeachers = teachers) {
+            const grid = document.getElementById('teachersGrid');
+            const noResults = document.getElementById('noResults');
+            
+            grid.innerHTML = '';
+
+            if (filteredTeachers.length === 0) {
+                noResults.classList.add('show');
+                return;
+            } else {
+                noResults.classList.remove('show');
+            }
+
+            filteredTeachers.forEach((teacher, index) => {
+                const card = document.createElement('div');
+                card.className = 'teacher-card';
+                card.innerHTML = `
+                    <div class="teacher-header">
+                        <div class="teacher-avatar">${getInitials(teacher.name)}</div>
+                        <h3 class="teacher-name">${teacher.name}</h3>
+                        <p class="teacher-subject">${teacher.subject}</p>
+                    </div>
+                    <div class="teacher-info">
+                        <div class="info-item">
+                            <span class="info-label">ID:</span>
+                            <span>${teacher.id}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Email:</span>
+                            <span>${teacher.email}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Phone:</span>
+                            <span>${teacher.phone}</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Experience:</span>
+                            <span>${teacher.experience} years</span>
+                        </div>
+                    </div>
+                    <div class="teacher-actions">
+                        <button class="btn btn-small" onclick="viewTeacher(${teachers.indexOf(teacher)})">View</button>
+                        <button class="btn btn-warning btn-small" onclick="editTeacher(${teachers.indexOf(teacher)})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteTeacher(${teachers.indexOf(teacher)})">Delete</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Search teachers
+        function searchTeachers() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
+            
+            if (searchTerm === '') {
+                renderTeachers();
+                return;
+            }
+
+            const filtered = teachers.filter(teacher =>
+                teacher.name.toLowerCase().includes(searchTerm) ||
+                teacher.subject.toLowerCase().includes(searchTerm) ||
+                teacher.id.toLowerCase().includes(searchTerm)
+            );
+
+            renderTeachers(filtered);
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                searchTeachers();
+            }
+        });
+
+        // Open add modal
+        function openAddModal() {
+            isEditMode = false;
+            document.getElementById('modalTitle').textContent = 'Add New Teacher';
+            document.getElementById('teacherForm').reset();
+            clearAllValidation();
+            document.getElementById('teacherModal').classList.add('show');
+        }
+
+        // Open edit modal
+        function editTeacher(index) {
+            isEditMode = true;
+            editIndex = index;
+            const teacher = teachers[index];
+
+            document.getElementById('modalTitle').textContent = 'Edit Teacher';
+            document.getElementById('teacherIndex').value = index;
+            document.getElementById('teacherId').value = teacher.id;
+            document.getElementById('teacherName').value = teacher.name;
+            document.getElementById('teacherEmail').value = teacher.email;
+            document.getElementById('teacherPhone').value = teacher.phone;
+            document.getElementById('teacherSubject').value = teacher.subject;
+            document.getElementById('teacherExperience').value = teacher.experience;
+
+            clearAllValidation();
+            document.getElementById('teacherModal').classList.add('show');
+        }
+
+        // View teacher
+        function viewTeacher(index) {
+            const teacher = teachers[index];
+            alert(`Teacher Details:\n\nID: ${teacher.id}\nName: ${teacher.name}\nEmail: ${teacher.email}\nPhone: ${teacher.phone}\nSubject: ${teacher.subject}\nExperience: ${teacher.experience} years`);
+        }
+
+        // Delete teacher
+        function deleteTeacher(index) {
+            const teacher = teachers[index];
+            
+            if (confirm(`Are you sure you want to delete ${teacher.name}?\n\nThis action cannot be undone.`)) {
+                teachers.splice(index, 1);
+                renderTeachers();
+                showAlert('Teacher deleted successfully!', 'success');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('teacherModal').classList.remove('show');
+            document.getElementById('teacherForm').reset();
+            clearAllValidation();
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('teacherModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+
+        // Show alert
+        function showAlert(message, type) {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.textContent = message;
+            alertBox.className = 'alert show alert-' + type;
+            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            setTimeout(() => {
+                alertBox.classList.remove('show');
+            }, 5000);
+        }
+
+        // Validation functions
+        function showError(input, message) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('invalid');
+            input.classList.remove('valid');
+            errorElement.textContent = message;
+            errorElement.classList.add('show');
+            
+            if (successElement) {
+                successElement.classList.remove('show');
+            }
+        }
+
+        function showSuccess(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.add('valid');
+            input.classList.remove('invalid');
+            errorElement.classList.remove('show');
+            
+            if (successElement) {
+                successElement.classList.add('show');
+            }
+        }
+
+        function clearValidation(input) {
+            const errorElement = document.getElementById(input.id + 'Error');
+            const successElement = document.getElementById(input.id + 'Success');
+            
+            input.classList.remove('valid', 'invalid');
+            if (errorElement) errorElement.classList.remove('show');
+            if (successElement) successElement.classList.remove('show');
+        }
+
+        function clearAllValidation() {
+            const inputs = ['teacherId', 'teacherName', 'teacherEmail', 'teacherPhone', 'teacherSubject', 'teacherExperience'];
+            inputs.forEach(id => {
+                const input = document.getElementById(id);
+                if (input) clearValidation(input);
+            });
+        }
+
+        // Validate Teacher ID
+        function validateTeacherId() {
+            const input = document.getElementById('teacherId');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Teacher ID is required');
+                return false;
+            }
+
+            if (!/^TCH\d{3}$/.test(value)) {
+                showError(input, 'Teacher ID must be in format TCH001');
+                return false;
+            }
+
+            // Check for duplicate ID (except in edit mode)
+            const isDuplicate = teachers.some((teacher, index) => 
+                teacher.id === value && (!isEditMode || index !== editIndex)
+            );
+
+            if (isDuplicate) {
+                showError(input, 'This Teacher ID already exists');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Teacher Name
+        function validateTeacherName() {
+            const input = document.getElementById('teacherName');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Teacher name is required');
+                return false;
+            }
+
+            if (value.length < 3) {
+                showError(input, 'Name must be at least 3 characters');
+                return false;
+            }
+
+            if (value.length > 50) {
+                showError(input, 'Name must be less than 50 characters');
+                return false;
+            }
+
+            const nameRegex = /^[a-zA-Z\s]+$/;
+            if (!nameRegex.test(value)) {
+                showError(input, 'Name can only contain letters and spaces');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Email
+        function validateTeacherEmail() {
+            const input = document.getElementById('teacherEmail');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Email is required');
+                return false;
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(value)) {
+                showError(input, 'Please enter a valid email address');
+                return false;
+            }
+
+            // Check for duplicate email (except in edit mode)
+            const isDuplicate = teachers.some((teacher, index) => 
+                teacher.email.toLowerCase() === value.toLowerCase() && (!isEditMode || index !== editIndex)
+            );
+
+            if (isDuplicate) {
+                showError(input, 'This email is already registered');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Phone
+        function validateTeacherPhone() {
+            const input = document.getElementById('teacherPhone');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Phone number is required');
+                return false;
+            }
+
+            const phoneDigits = value.replace(/\D/g, '');
+
+            if (phoneDigits.length !== 10) {
+                showError(input, 'Phone number must be exactly 10 digits');
+                return false;
+            }
+
+            if (phoneDigits[0] === '0' || phoneDigits[0] === '1') {
+                showError(input, 'Phone number must start with digits 2-9');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Subject
+        function validateTeacherSubject() {
+            const input = document.getElementById('teacherSubject');
+            const value = input.value;
+
+            if (value === '') {
+                showError(input, 'Please select a subject');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Validate Experience
+        function validateTeacherExperience() {
+            const input = document.getElementById('teacherExperience');
+            const value = input.value.trim();
+
+            if (value === '') {
+                showError(input, 'Experience is required');
+                return false;
+            }
+
+            const experience = parseInt(value);
+
+            if (isNaN(experience) || experience < 0) {
+                showError(input, 'Experience must be a positive number');
+                return false;
+            }
+
+            if (experience > 50) {
+                showError(input, 'Experience cannot exceed 50 years');
+                return false;
+            }
+
+            showSuccess(input);
+            return true;
+        }
+
+        // Setup validation
+        function setupValidation() {
+            const teacherId = document.getElementById('teacherId');
+            const teacherName = document.getElementById('teacherName');
+            const teacherEmail = document.getElementById('teacherEmail');
+            const teacherPhone = document.getElementById('teacherPhone');
+            const teacherSubject = document.getElementById('teacherSubject');
+            const teacherExperience = document.getElementById('teacherExperience');
+
+            // Blur validation
+            teacherId.addEventListener('blur', validateTeacherId);
+            teacherName.addEventListener('blur', validateTeacherName);
+            teacherEmail.addEventListener('blur', validateTeacherEmail);
+            teacherPhone.addEventListener('blur', validateTeacherPhone);
+            teacherSubject.addEventListener('blur', validateTeacherSubject);
+            teacherExperience.addEventListener('blur', validateTeacherExperience);
+
+            // Clear validation on input
+            teacherId.addEventListener('input', () => clearValidation(teacherId));
+            teacherName.addEventListener('input', () => clearValidation(teacherName));
+            teacherEmail.addEventListener('input', () => clearValidation(teacherEmail));
+            teacherPhone.addEventListener('input', () => clearValidation(teacherPhone));
+            teacherSubject.addEventListener('input', () => clearValidation(teacherSubject));
+            teacherExperience.addEventListener('input', () => clearValidation(teacherExperience));
+
+            // Phone formatting
+            teacherPhone.addEventListener('input', function() {
+                let value = this.value.replace(/\D/g, '');
+                if (value.length > 10) {
+                    value = value.substring(0, 10);
+                }
+                // Format as +91 XXXXX XXXXX
+                if (value.length > 5) {
+                    this.value = '+91 ' + value.substring(0, 5) + ' ' + value.substring(5);
+                } else if (value.length > 0) {
+                    this.value = '+91 ' + value;
+                } else {
+                    this.value = '';
+                }
+            });
+
+            // Teacher ID formatting
+            teacherId.addEventListener('input', function() {
+                let value = this.value.toUpperCase();
+                // Remove spaces and special characters
+                value = value.replace(/[^A-Z0-9]/g, '');
+                
+                // Ensure it starts with TCH
+                if (value.length > 0 && !value.startsWith('TCH')) {
+                    if (value.length <= 3) {
+                        value = 'TCH';
+                    }
+                }
+                
+                // Limit length
+                if (value.length > 6) {
+                    value = value.substring(0, 6);
+                }
+                
+                this.value = value;
+            });
+
+            // XSS prevention
+            const textInputs = [teacherId, teacherName, teacherEmail, teacherPhone];
+            textInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/<[^>]*>/g, '');
+                });
+            });
+
+            // Limit experience input
+            teacherExperience.addEventListener('input', function() {
+                if (this.value < 0) this.value = 0;
+                if (this.value > 50) this.value = 50;
+            });
+        }
+
+        // Form submission
+        document.getElementById('teacherForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Validate all fields
+            const isIdValid = validateTeacherId();
+            const isNameValid = validateTeacherName();
+            const isEmailValid = validateTeacherEmail();
+            const isPhoneValid = validateTeacherPhone();
+            const isSubjectValid = validateTeacherSubject();
+            const isExperienceValid = validateTeacherExperience();
+
+            if (isIdValid && isNameValid && isEmailValid && isPhoneValid && isSubjectValid && isExperienceValid) {
+                const teacherData = {
+                    id: document.getElementById('teacherId').value.trim(),
+                    name: document.getElementById('teacherName').value.trim(),
+                    email: document.getElementById('teacherEmail').value.trim(),
+                    phone: document.getElementById('teacherPhone').value.trim(),
+                    subject: document.getElementById('teacherSubject').value,
+                    experience: parseInt(document.getElementById('teacherExperience').value)
+                };
+
+                if (isEditMode) {
+                    teachers[editIndex] = teacherData;
+                    showAlert('Teacher updated successfully!', 'success');
+                } else {
+                    teachers.push(teacherData);
+                    showAlert('Teacher added successfully!', 'success');
+                }
+
+                renderTeachers();
+                closeModal();
+            } else {
+                showAlert('Please fix all errors before submitting', 'error');
+                
+                // Focus on first invalid field
+                if (!isIdValid) document.getElementById('teacherId').focus();
+                else if (!isNameValid) document.getElementById('teacherName').focus();
+                else if (!isEmailValid) document.getElementById('teacherEmail').focus();
+                else if (!isPhoneValid) document.getElementById('teacherPhone').focus();
+                else if (!isSubjectValid) document.getElementById('teacherSubject').focus();
+                else if (!isExperienceValid) document.getElementById('teacherExperience').focus();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            // Escape key to close modal
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('teacherModal');
+                if (modal.classList.contains('show')) {
+                    closeModal();
+                }
+            }
+            
+            // Ctrl/Cmd + K to focus search
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+        });
+
+        // Auto-save to localStorage (optional feature)
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('edutrack_teachers', JSON.stringify(teachers));
+            } catch (e) {
+                console.error('Failed to save to localStorage:', e);
+            }
+        }
+
+        function loadFromLocalStorage() {
+            try {
+                const saved = localStorage.getItem('edutrack_teachers');
+                if (saved) {
+                    teachers = JSON.parse(saved);
+                    renderTeachers();
+                }
+            } catch (e) {
+                console.error('Failed to load from localStorage:', e);
+            }
+        }
+
+        // Uncomment to enable localStorage persistence
+        // loadFromLocalStorage();
+        // window.addEventListener('beforeunload', saveToLocalStorage);
+    </script>
+</body>
+</html>

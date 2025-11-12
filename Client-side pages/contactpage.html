@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - School Management System</title>
+    <style>
+        /* (your existing CSS remains exactly same) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header { background: #2c3e50; color: white; padding: 1rem 0; }
+        nav { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links { display: flex; list-style: none; gap: 2rem; }
+        .nav-links a { color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; transition: background 0.3s; }
+        .nav-links a:hover, .nav-links a.active { background: #34495e; }
+        .page-title { background: white; padding: 2rem 0; text-align: center; }
+        .page-title h1 { color: #2c3e50; margin-bottom: 0.5rem; }
+        .content { padding: 2rem 0; }
+        .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+        .contact-form, .contact-info { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #2c3e50; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #3498db; }
+        textarea { resize: vertical; height: 120px; }
+        .btn { background: #3498db; color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; cursor: pointer; font-size: 1rem; transition: background 0.3s; }
+        .btn:hover { background: #2980b9; }
+        .info-item { display: flex; align-items: center; margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; }
+        .info-icon { width: 50px; height: 50px; background: #3498db; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem; margin-right: 1rem; }
+        .info-details h3 { color: #2c3e50; margin-bottom: 0.5rem; }
+        .info-details p { color: #666; margin: 0; }
+        .school-hours { background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; }
+        .hours-table { width: 100%; margin-top: 1rem; }
+        .hours-table th, .hours-table td { padding: 0.8rem; text-align: left; border-bottom: 1px solid #eee; }
+        .hours-table th { background: #f8f9fa; color: #2c3e50; font-weight: bold; }
+        footer { background: #2c3e50; color: white; text-align: center; padding: 1.5rem 0; margin-top: 2rem; }
+        @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">EduTrack</div>
+            <ul class="nav-links">
+                <li><a href="home.html">Home</a></li>
+                <li><a href="students.html">Students</a></li>
+                <li><a href="teachers.html">Teachers</a></li>
+                <li><a href="courses.html">Courses</a></li>
+                <li><a href="contact.html" class="active">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Contact Us</h1>
+            <p>Get in touch with our school administration</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div class="contact-grid">
+                <div class="contact-form">
+                    <h2>Send us a Message</h2>
+                    <!-- ADD onsubmit attribute here -->
+                    <form onsubmit="return validateForm()">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <select id="subject" name="subject">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="admission">Admission</option>
+                                <option value="academic">Academic Support</option>
+                                <option value="technical">Technical Support</option>
+                                <option value="complaint">Complaint</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" placeholder="Write your message here..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn">Send Message</button>
+                    </form>
+                </div>
+
+                <div class="contact-info">
+                    <h2>Contact Information</h2>
+                    <div class="info-item"><div class="info-icon">📍</div><div class="info-details"><h3>Address</h3><p>Rajkot-360003<br>Gujarat<br>India</p></div></div>
+                    <div class="info-item"><div class="info-icon">📞</div><div class="info-details"><h3>Phone</h3><p>Tel: 02824 25265 <br>Admissions: +91 92525 30303 / 98989 56566</p></div></div>
+                    <div class="info-item"><div class="info-icon">✉️</div><div class="info-details"><h3>Email</h3><p>info@edutack.edu<br>admissions@edutrack.edu</p></div></div>
+                    <div class="info-item"><div class="info-icon">🌐</div><div class="info-details"><h3>Website</h3><p>www.edutrack.com</p></div></div>
+                </div>
+            </div>
+
+            <div class="school-hours">
+                <h2>School Hours</h2>
+                <table class="hours-table">
+                    <thead>
+                        <tr><th>Day</th><th>Office Hours</th><th>Class Hours</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Monday - Friday</td><td>8:00 AM - 3:00 PM</td><td>8:30 AM - 2:30 PM</td></tr>
+                        <tr><td>Saturday</td><td>8:00 AM - 1:00 PM</td><td>9:00 AM - 1:00 PM</td></tr>
+                        <tr><td>Sunday</td><td>Closed</td><td>Closed</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Validation Script -->
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value.trim();
+
+            // Name validation
+            if (name === "" || !/^[A-Za-z\s]+$/.test(name)) {
+                alert("Please enter a valid full name (letters only).");
+                return false;
+            }
+
+            // Email validation
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!email.match(emailPattern)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            // Phone validation
+            if (phone !== "" && !/^\d{10}$/.test(phone)) {
+                alert("Please enter a valid 10-digit phone number.");
+                return false;
+            }
+
+            // Subject validation
+            if (subject === "") {
+                alert("Please select a subject.");
+                return false;
+            }
+
+            // Message validation
+            if (message.length < 10) {
+                alert("Message must be at least 10 characters long.");
+                return false;
+            }
+
+            alert("Form submitted successfully!");
+            return true;
+        }
+    </script>
+</body>
+</html>

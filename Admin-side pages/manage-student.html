@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Students - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 1rem 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background: #555;
+        }
+
+        .admin-info {
+            background: #666;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .page-title {
+            background: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .page-title h1 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .content {
+            padding: 2rem 0;
+        }
+
+        .admin-actions {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .search-filter {
+            display: flex;
+            gap: 1rem;
+            flex: 1;
+        }
+
+        .search-filter input, .search-filter select {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .search-filter input {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+        }
+
+        .students-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: #666;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-suspended {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-graduated {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .bulk-actions {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .bulk-actions.show {
+            display: block;
+        }
+
+        .checkbox-col {
+            width: 50px;
+            text-align: center;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 2rem;
+        }
+
+        /* Popup form styling */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content h2 {
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .modal-content label {
+            display: block;
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+        .modal-content input, .modal-content select {
+            width: 100%;
+            padding: 0.7rem;
+            margin-top: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px; right: 15px;
+            font-size: 1.5rem;
+            color: #333;
+            cursor: pointer;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .action-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-filter {
+                flex-direction: column;
+            }
+
+            .students-table {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 800px;
+            }
+
+            th, td {
+                padding: 0.5rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">Admin Panel</div>
+            <ul class="nav-links">
+                <li><a href="admin-dashboard.html">Dashboard</a></li>
+                <li><a href="admin-students.html" class="active">Manage Students</a></li>
+                <li><a href="admin-teachers.html">Manage Teachers</a></li>
+                <li><a href="admin-courses.html">Manage Courses</a></li>
+                <li><a href="admin-reports.html">Reports</a></li>
+            </ul>
+            <div class="admin-info">Admin: Abhiraj Jadeja</div>
+        </nav>
+    </header>
+
+    <section class="page-title">
+        <div class="container">
+            <h1>Manage Students</h1>
+            <p>Complete student administration and management</p>
+        </div>
+    </section>
+
+    <main class="content">
+        <div class="container">
+            <div class="admin-actions">
+                <div class="action-bar">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Search students by name, ID, or email...">
+                        <select>
+                            <option value="">All Classes</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                        <select>
+                            <option value="">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended</option>
+                            <option value="graduated">Graduated</option>
+                        </select>
+                    </div>
+                    <div>
+                        <button class="btn">Search</button>
+                        <button class="btn btn-success" onclick="openModal()">Add New Student</button>
+                        <button class="btn btn-warning">Import Students</button>
+                    </div>
+                </div>
+
+                <div class="bulk-actions" id="bulkActions">
+                    <strong>Bulk Actions:</strong>
+                    <button class="btn btn-small">Send Email</button>
+                    <button class="btn btn-small btn-warning">Update Status</button>
+                    <button class="btn btn-small btn-danger">Delete Selected</button>
+                    <button class="btn btn-small" onclick="document.getElementById('bulkActions').classList.remove('show')">Cancel</button>
+                </div>
+            </div>
+
+            <div class="students-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="checkbox-col">
+                                <input type="checkbox" id="selectAll" onchange="toggleBulkActions()">
+                            </th>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Class</th>
+                            <th>Status</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="checkbox-col"><input type="checkbox" name="studentSelect" onchange="toggleBulkActions()"></td>
+                            <td>101</td>
+                            <td>Daksharajsinh Jadeja</td>
+                            <td>daksharajsinh.jadeja@gmail.com</td>
+                            <td>+91 96969 63632</td>
+                            <td>Grade 10A</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                            <td>Sept 2025</td>
+                            <td class="action-buttons">
+                                <button class="btn btn-small">View</button>
+                                <button class="btn btn-warning btn-small">Edit</button>
+                                <button class="btn btn-danger btn-small">Delete</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 EduTrack. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modal Form for Adding Student -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Add New Student</h2>
+            <form id="studentForm" onsubmit="return validateStudentForm()">
+                <label>Full Name</label>
+                <input type="text" id="name" placeholder="Enter full name">
+
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Enter email address">
+
+                <label>Phone Number</label>
+                <input type="text" id="phone" placeholder="Enter phone number">
+
+                <label>Class</label>
+                <select id="class">
+                    <option value="">Select Class</option>
+                    <option>Grade 9</option>
+                    <option>Grade 10</option>
+                    <option>Grade 11</option>
+                    <option>Grade 12</option>
+                </select>
+
+                <br><br>
+                <button type="submit" class="btn btn-success" style="width:100%;">Add Student</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleBulkActions() {
+            const checkboxes = document.querySelectorAll('input[name="studentSelect"]');
+            const selectAll = document.getElementById('selectAll');
+            const bulkActions = document.getElementById('bulkActions');
+            const checkedBoxes = Array.from(checkboxes).filter(cb => cb.checked);
+            if (checkedBoxes.length > 0) bulkActions.classList.add('show');
+            else bulkActions.classList.remove('show');
+            if (checkedBoxes.length === checkboxes.length) {
+                selectAll.checked = true;
+                selectAll.indeterminate = false;
+            } else if (checkedBoxes.length > 0) selectAll.indeterminate = true;
+            else {
+                selectAll.checked = false;
+                selectAll.indeterminate = false;
+            }
+        }
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('input[name="studentSelect"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            toggleBulkActions();
+        });
+
+        // Modal controls
+        function openModal() {
+            document.getElementById('studentModal').style.display = 'flex';
+        }
+        function closeModal() {
+            document.getElementById('studentModal').style.display = 'none';
+            document.getElementById('studentForm').reset();
+        }
+
+        // Validation
+        function validateStudentForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const classSel = document.getElementById('class').value.trim();
+
+            if (!name || !email || !phone || !classSel) {
+                alert("All fields are required!");
+                return false;
+            }
+
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            const phonePattern = /^[0-9]{10}$/;
+
+            if (!emailPattern.test(email)) {
+                alert("Enter a valid email address!");
+                return false;
+            }
+
+            if (!phonePattern.test(phone)) {
+                alert("Enter a valid 10-digit phone number!");
+                return false;
+            }
+
+            alert("Student added successfully!");
+            closeModal();
+            return false; // Prevent actual form submission for demo
+        }
+    </script>
+</body>
+</html>
