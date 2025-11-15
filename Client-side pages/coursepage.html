@@ -192,7 +192,6 @@
             color: #721c24;
         }
 
-        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -357,17 +356,6 @@
             border: 1px solid #f5c6cb;
         }
 
-        .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: #999;
-            display: none;
-        }
-
-        .no-results.show {
-            display: table-row;
-        }
-
         footer {
             background: #2c3e50;
             color: white;
@@ -376,25 +364,15 @@
             margin-top: 2rem;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
                 flex-direction: column;
                 gap: 0.5rem;
             }
 
-            .nav-links a {
-                padding: 0.3rem 0.8rem;
-                font-size: 0.9rem;
-            }
-
             .search-box {
                 flex-direction: column;
                 align-items: stretch;
-            }
-
-            .search-box input {
-                margin-bottom: 1rem;
             }
 
             .courses-table {
@@ -405,65 +383,9 @@
                 min-width: 700px;
             }
 
-            th, td {
-                padding: 0.5rem;
-                font-size: 0.9rem;
-            }
-
             .action-buttons {
                 flex-direction: column;
                 gap: 0.3rem;
-            }
-
-            .btn-small {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.8rem;
-            }
-
-            .status-badge {
-                padding: 0.2rem 0.6rem;
-                font-size: 0.7rem;
-            }
-
-            .modal-content {
-                margin: 10% 5%;
-                padding: 1.5rem;
-            }
-
-            .form-actions {
-                flex-direction: column;
-            }
-
-            .btn {
-                width: 100%;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .page-title h1 {
-                font-size: 1.8rem;
-            }
-
-            .container {
-                padding: 0 10px;
-            }
-
-            .actions {
-                padding: 1rem;
-            }
-
-            th, td {
-                padding: 0.3rem;
-                font-size: 0.8rem;
-            }
-
-            table {
-                min-width: 650px;
-            }
-
-            .modal-content {
-                margin: 5%;
-                padding: 1rem;
             }
         }
     </style>
@@ -473,11 +395,11 @@
         <nav class="container">
             <div class="logo">EduTrack</div>
             <ul class="nav-links">
-                <li><a href="home.html">Home</a></li>
-                <li><a href="students.html">Students</a></li>
-                <li><a href="teachers.html">Teachers</a></li>
-                <li><a href="courses.html" class="active">Courses</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                <li><a href="homepage.html">Home</a></li>
+                <li><a href="studentpage.html">Students</a></li>
+                <li><a href="teacherpage.html">Teachers</a></li>
+                <li><a href="coursepage.html" class="active">Courses</a></li>
+                <li><a href="contactpage.html">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -515,14 +437,13 @@
                         </tr>
                     </thead>
                     <tbody id="courseTableBody">
-                        <!-- Course rows will be populated by JavaScript -->
+                        <!-- Courses will be loaded here -->
                     </tbody>
                 </table>
             </div>
         </div>
     </main>
 
-    <!-- Add/Edit Course Modal -->
     <div id="courseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -576,7 +497,7 @@
 
                 <div class="form-group">
                     <label for="courseStudents">Number of Students <span class="required">*</span></label>
-                    <input type="number" id="courseStudents" name="courseStudents" placeholder="Enter number of students" min="0" max="100">
+                    <input type="number" id="courseStudents" name="courseStudents" placeholder="Enter number" min="0" max="100">
                     <span class="error-message" id="courseStudentsError"></span>
                     <span class="success-message" id="courseStudentsSuccess">✓ Valid</span>
                 </div>
@@ -607,7 +528,7 @@
     </footer>
 
     <script>
-        // Sample course data
+        // Course data
         let courses = [
             { code: 'MATH101', name: 'Advanced Mathematics', teacher: 'Shweta Ramani', duration: '1 Semester', students: 25, status: 'Active' },
             { code: 'ENG102', name: 'English Literature', teacher: 'Drashti Chovatiya', duration: '1 Year', students: 30, status: 'Active' },
@@ -619,25 +540,20 @@
         let isEditMode = false;
         let editIndex = -1;
 
-        // Initialize page
-        window.onload = function() {
-            renderCourses();
-            setupValidation();
-        };
-
-        // Render courses table
+        // Render courses
         function renderCourses(filteredCourses = courses) {
             const tbody = document.getElementById('courseTableBody');
             tbody.innerHTML = '';
 
             if (filteredCourses.length === 0) {
-                tbody.innerHTML = '<tr class="no-results show"><td colspan="7">No courses found</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:2rem;">No courses found</td></tr>';
                 return;
             }
 
-            filteredCourses.forEach((course, index) => {
+            filteredCourses.forEach((course) => {
                 const row = document.createElement('tr');
                 const statusClass = course.status === 'Active' ? 'status-active' : 'status-inactive';
+                const originalIndex = courses.indexOf(course);
                 
                 row.innerHTML = `
                     <td>${course.code}</td>
@@ -647,41 +563,33 @@
                     <td>${course.students}</td>
                     <td><span class="status-badge ${statusClass}">${course.status}</span></td>
                     <td class="action-buttons">
-                        <button class="btn btn-small" onclick="viewCourse(${courses.indexOf(course)})">View</button>
-                        <button class="btn btn-warning btn-small" onclick="editCourse(${courses.indexOf(course)})">Edit</button>
-                        <button class="btn btn-danger btn-small" onclick="deleteCourse(${courses.indexOf(course)})">Delete</button>
+                        <button class="btn btn-small" onclick="viewCourse(${originalIndex})">View</button>
+                        <button class="btn btn-warning btn-small" onclick="editCourse(${originalIndex})">Edit</button>
+                        <button class="btn btn-danger btn-small" onclick="deleteCourse(${originalIndex})">Delete</button>
                     </td>
                 `;
                 tbody.appendChild(row);
             });
         }
 
-        // Search courses
         function searchCourses() {
             const searchTerm = document.getElementById('searchInput').value.toLowerCase().trim();
-            
             if (searchTerm === '') {
                 renderCourses();
                 return;
             }
-
             const filtered = courses.filter(course =>
                 course.name.toLowerCase().includes(searchTerm) ||
                 course.code.toLowerCase().includes(searchTerm) ||
                 course.teacher.toLowerCase().includes(searchTerm)
             );
-
             renderCourses(filtered);
         }
 
-        // Search on Enter key
         document.getElementById('searchInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') {
-                searchCourses();
-            }
+            if (e.key === 'Enter') searchCourses();
         });
 
-        // Open add modal
         function openAddModal() {
             isEditMode = false;
             document.getElementById('modalTitle').textContent = 'Add New Course';
@@ -690,12 +598,10 @@
             document.getElementById('courseModal').classList.add('show');
         }
 
-        // Open edit modal
         function editCourse(index) {
             isEditMode = true;
             editIndex = index;
             const course = courses[index];
-
             document.getElementById('modalTitle').textContent = 'Edit Course';
             document.getElementById('courseIndex').value = index;
             document.getElementById('courseCode').value = course.code;
@@ -704,287 +610,206 @@
             document.getElementById('courseDuration').value = course.duration;
             document.getElementById('courseStudents').value = course.students;
             document.getElementById('courseStatus').value = course.status;
-
             clearAllValidation();
             document.getElementById('courseModal').classList.add('show');
         }
 
-        // View course
         function viewCourse(index) {
-            const course = courses[index];
-            alert(`Course Details:\n\nCode: ${course.code}\nName: ${course.name}\nTeacher: ${course.teacher}\nDuration: ${course.duration}\nStudents: ${course.students}\nStatus: ${course.status}`);
+            const c = courses[index];
+            alert(`Course Details:\n\nCode: ${c.code}\nName: ${c.name}\nTeacher: ${c.teacher}\nDuration: ${c.duration}\nStudents: ${c.students}\nStatus: ${c.status}`);
         }
 
-        // Delete course
         function deleteCourse(index) {
-            const course = courses[index];
-            
-            if (confirm(`Are you sure you want to delete ${course.name}?\n\nThis action cannot be undone.`)) {
+            const c = courses[index];
+            if (confirm(`Delete ${c.name}?`)) {
                 courses.splice(index, 1);
                 renderCourses();
                 showAlert('Course deleted successfully!', 'success');
             }
         }
 
-        // Close modal
         function closeModal() {
             document.getElementById('courseModal').classList.remove('show');
             document.getElementById('courseForm').reset();
             clearAllValidation();
         }
 
-        // Close modal on outside click
         window.onclick = function(event) {
             const modal = document.getElementById('courseModal');
-            if (event.target === modal) {
-                closeModal();
-            }
+            if (event.target === modal) closeModal();
         };
 
-        // Show alert
         function showAlert(message, type) {
             const alertBox = document.getElementById('alertBox');
             alertBox.textContent = message;
             alertBox.className = 'alert show alert-' + type;
-            alertBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
-
-            setTimeout(() => {
-                alertBox.classList.remove('show');
-            }, 5000);
+            setTimeout(() => alertBox.classList.remove('show'), 5000);
         }
 
-        // Validation functions
         function showError(input, message) {
             const errorElement = document.getElementById(input.id + 'Error');
             const successElement = document.getElementById(input.id + 'Success');
-            
             input.classList.add('invalid');
             input.classList.remove('valid');
             errorElement.textContent = message;
             errorElement.classList.add('show');
-            
-            if (successElement) {
-                successElement.classList.remove('show');
-            }
+            if (successElement) successElement.classList.remove('show');
         }
 
         function showSuccess(input) {
             const errorElement = document.getElementById(input.id + 'Error');
             const successElement = document.getElementById(input.id + 'Success');
-            
             input.classList.add('valid');
             input.classList.remove('invalid');
             errorElement.classList.remove('show');
-            
-            if (successElement) {
-                successElement.classList.add('show');
-            }
+            if (successElement) successElement.classList.add('show');
         }
 
         function clearValidation(input) {
             const errorElement = document.getElementById(input.id + 'Error');
             const successElement = document.getElementById(input.id + 'Success');
-            
             input.classList.remove('valid', 'invalid');
             if (errorElement) errorElement.classList.remove('show');
             if (successElement) successElement.classList.remove('show');
         }
 
         function clearAllValidation() {
-            const inputs = ['courseCode', 'courseName', 'courseTeacher', 'courseDuration', 'courseStudents', 'courseStatus'];
-            inputs.forEach(id => {
+            ['courseCode', 'courseName', 'courseTeacher', 'courseDuration', 'courseStudents', 'courseStatus'].forEach(id => {
                 const input = document.getElementById(id);
                 if (input) clearValidation(input);
             });
         }
 
-        // Validate Course Code
         function validateCourseCode() {
             const input = document.getElementById('courseCode');
             const value = input.value.trim().toUpperCase();
-
             if (value === '') {
                 showError(input, 'Course code is required');
                 return false;
             }
-
-            // Course code format: 3-4 letters followed by 3 digits
             if (!/^[A-Z]{3,4}\d{3}$/.test(value)) {
-                showError(input, 'Course code must be 3-4 letters followed by 3 digits (e.g., MATH101)');
+                showError(input, 'Format: 3-4 letters + 3 digits (e.g., MATH101)');
                 return false;
             }
-
-            // Check for duplicate code (except in edit mode)
             const isDuplicate = courses.some((course, index) => 
                 course.code === value && (!isEditMode || index !== editIndex)
             );
-
             if (isDuplicate) {
                 showError(input, 'This course code already exists');
                 return false;
             }
-
             showSuccess(input);
             return true;
         }
 
-        // Validate Course Name
         function validateCourseName() {
             const input = document.getElementById('courseName');
             const value = input.value.trim();
-
             if (value === '') {
                 showError(input, 'Course name is required');
                 return false;
             }
-
             if (value.length < 3) {
-                showError(input, 'Course name must be at least 3 characters');
+                showError(input, 'Name must be at least 3 characters');
                 return false;
             }
-
             if (value.length > 100) {
-                showError(input, 'Course name must be less than 100 characters');
+                showError(input, 'Name must be less than 100 characters');
                 return false;
             }
-
-            // Allow letters, numbers, spaces, and common punctuation
-            const nameRegex = /^[a-zA-Z0-9\s\-\&\(\)\.]+$/;
-            if (!nameRegex.test(value)) {
-                showError(input, 'Course name can only contain letters, numbers, spaces, and basic punctuation');
-                return false;
-            }
-
             showSuccess(input);
             return true;
         }
 
-        // Validate Teacher
         function validateCourseTeacher() {
             const input = document.getElementById('courseTeacher');
-            const value = input.value;
-
-            if (value === '') {
+            if (input.value === '') {
                 showError(input, 'Please select a teacher');
                 return false;
             }
-
             showSuccess(input);
             return true;
         }
 
-        // Validate Duration
         function validateCourseDuration() {
             const input = document.getElementById('courseDuration');
-            const value = input.value;
-
-            if (value === '') {
-                showError(input, 'Please select course duration');
+            if (input.value === '') {
+                showError(input, 'Please select duration');
                 return false;
             }
-
             showSuccess(input);
             return true;
         }
 
-        // Validate Students
         function validateCourseStudents() {
             const input = document.getElementById('courseStudents');
             const value = input.value.trim();
-
             if (value === '') {
                 showError(input, 'Number of students is required');
                 return false;
             }
-
             const students = parseInt(value);
-
             if (isNaN(students) || students < 0) {
-                showError(input, 'Number of students must be a positive number');
+                showError(input, 'Must be a positive number');
                 return false;
             }
-
             if (students > 100) {
-                showError(input, 'Number of students cannot exceed 100');
+                showError(input, 'Cannot exceed 100 students');
                 return false;
             }
-
             showSuccess(input);
             return true;
         }
 
-        // Validate Status
         function validateCourseStatus() {
             const input = document.getElementById('courseStatus');
-            const value = input.value;
-
-            if (value === '') {
-                showError(input, 'Please select course status');
+            if (input.value === '') {
+                showError(input, 'Please select status');
                 return false;
             }
-
             showSuccess(input);
             return true;
         }
 
-        // Setup validation
         function setupValidation() {
-            const courseCode = document.getElementById('courseCode');
-            const courseName = document.getElementById('courseName');
-            const courseTeacher = document.getElementById('courseTeacher');
-            const courseDuration = document.getElementById('courseDuration');
-            const courseStudents = document.getElementById('courseStudents');
-            const courseStatus = document.getElementById('courseStatus');
+            const fields = {
+                courseCode: validateCourseCode,
+                courseName: validateCourseName,
+                courseTeacher: validateCourseTeacher,
+                courseDuration: validateCourseDuration,
+                courseStudents: validateCourseStudents,
+                courseStatus: validateCourseStatus
+            };
 
-            // Blur validation
-            courseCode.addEventListener('blur', validateCourseCode);
-            courseName.addEventListener('blur', validateCourseName);
-            courseTeacher.addEventListener('blur', validateCourseTeacher);
-            courseDuration.addEventListener('blur', validateCourseDuration);
-            courseStudents.addEventListener('blur', validateCourseStudents);
-            courseStatus.addEventListener('blur', validateCourseStatus);
+            Object.keys(fields).forEach(id => {
+                const input = document.getElementById(id);
+                input.addEventListener('blur', fields[id]);
+                input.addEventListener('input', () => clearValidation(input));
+            });
 
-            // Clear validation on input
-            courseCode.addEventListener('input', () => clearValidation(courseCode));
-            courseName.addEventListener('input', () => clearValidation(courseName));
-            courseTeacher.addEventListener('input', () => clearValidation(courseTeacher));
-            courseDuration.addEventListener('input', () => clearValidation(courseDuration));
-            courseStudents.addEventListener('input', () => clearValidation(courseStudents));
-            courseStatus.addEventListener('input', () => clearValidation(courseStatus));
-
-            // Course code formatting
-            courseCode.addEventListener('input', function() {
+            document.getElementById('courseCode').addEventListener('input', function() {
                 this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
             });
 
-            // Limit students input
-            courseStudents.addEventListener('input', function() {
+            document.getElementById('courseStudents').addEventListener('input', function() {
                 if (this.value < 0) this.value = 0;
                 if (this.value > 100) this.value = 100;
             });
-
-            // XSS prevention
-            const textInputs = [courseCode, courseName];
-            textInputs.forEach(input => {
-                input.addEventListener('input', function() {
-                    this.value = this.value.replace(/<[^>]*>/g, '');
-                });
-            });
         }
 
-        // Form submission
         document.getElementById('courseForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            const validations = [
+                validateCourseCode(),
+                validateCourseName(),
+                validateCourseTeacher(),
+                validateCourseDuration(),
+                validateCourseStudents(),
+                validateCourseStatus()
+            ];
 
-            // Validate all fields
-            const isCodeValid = validateCourseCode();
-            const isNameValid = validateCourseName();
-            const isTeacherValid = validateCourseTeacher();
-            const isDurationValid = validateCourseDuration();
-            const isStudentsValid = validateCourseStudents();
-            const isStatusValid = validateCourseStatus();
-
-            if (isCodeValid && isNameValid && isTeacherValid && isDurationValid && isStudentsValid && isStatusValid) {
+            if (validations.every(v => v)) {
                 const courseData = {
                     code: document.getElementById('courseCode').value.trim().toUpperCase(),
                     name: document.getElementById('courseName').value.trim(),
@@ -1005,366 +830,17 @@
                 renderCourses();
                 closeModal();
             } else {
-                showAlert('Please fix all errors before submitting', 'error');
-                
-                // Focus on first invalid field
-                if (!isCodeValid) document.getElementById('courseCode').focus();
-                else if (!isNameValid) document.getElementById('courseName').focus();
-                else if (!isTeacherValid) document.getElementById('courseTeacher').focus();
-                else if (!isDurationValid) document.getElementById('courseDuration').focus();
-                else if (!isStudentsValid) document.getElementById('courseStudents').focus();
-                else if (!isStatusValid) document.getElementById('courseStatus').focus();
+                showAlert('Please fix all errors', 'error');
             }
         });
 
-        // Keyboard shortcuts
-        document.addEventListener('keydown', function(e) {
-            // Escape key to close modal
-            if (e.key === 'Escape') {
-                const modal = document.getElementById('courseModal');
-                if (modal.classList.contains('show')) {
-                    closeModal();
-                }
-            }
-            
-            // Ctrl/Cmd + K to focus search
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                document.getElementById('searchInput').focus();
-            }
-            
-            // Ctrl/Cmd + N to add new course
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
-                e.preventDefault();
-                openAddModal();
-            }
+        // Initialize
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Loading courses...');
+            renderCourses();
+            setupValidation();
+            console.log('Courses loaded:', courses.length);
         });
-
-        // Filter by status
-        function filterByStatus(status) {
-            if (status === 'all') {
-                renderCourses();
-                return;
-            }
-            
-            const filtered = courses.filter(course => 
-                course.status.toLowerCase() === status.toLowerCase()
-            );
-            renderCourses(filtered);
-        }
-
-        // Sort courses
-        function sortCourses(field, order = 'asc') {
-            const sorted = [...courses].sort((a, b) => {
-                let valueA = a[field];
-                let valueB = b[field];
-                
-                // Handle numeric fields
-                if (field === 'students') {
-                    valueA = parseInt(valueA);
-                    valueB = parseInt(valueB);
-                }
-                
-                // Handle string fields
-                if (typeof valueA === 'string') {
-                    valueA = valueA.toLowerCase();
-                    valueB = valueB.toLowerCase();
-                }
-                
-                if (order === 'asc') {
-                    return valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
-                } else {
-                    return valueA < valueB ? 1 : valueA > valueB ? -1 : 0;
-                }
-            });
-            
-            renderCourses(sorted);
-        }
-
-        // Export to CSV (optional feature)
-        function exportToCSV() {
-            if (courses.length === 0) {
-                alert('No courses to export');
-                return;
-            }
-            
-            let csv = 'Course Code,Course Name,Teacher,Duration,Students,Status\n';
-            
-            courses.forEach(course => {
-                csv += `${course.code},"${course.name}",${course.teacher},${course.duration},${course.students},${course.status}\n`;
-            });
-            
-            // Create download link
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'courses_' + new Date().toISOString().split('T')[0] + '.csv';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            showAlert('Courses exported successfully!', 'success');
-        }
-
-        // Print course list
-        function printCourses() {
-            if (courses.length === 0) {
-                alert('No courses to print');
-                return;
-            }
-            
-            const printWindow = window.open('', '_blank');
-            let html = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Course List - EduTrack</title>
-                    <style>
-                        body {
-                            font-family: Arial, sans-serif;
-                            padding: 20px;
-                        }
-                        h1 {
-                            text-align: center;
-                            color: #2c3e50;
-                        }
-                        table {
-                            width: 100%;
-                            border-collapse: collapse;
-                            margin-top: 20px;
-                        }
-                        th, td {
-                            border: 1px solid #ddd;
-                            padding: 12px;
-                            text-align: left;
-                        }
-                        th {
-                            background-color: #2c3e50;
-                            color: white;
-                        }
-                        tr:nth-child(even) {
-                            background-color: #f2f2f2;
-                        }
-                        .active {
-                            color: #27ae60;
-                            font-weight: bold;
-                        }
-                        .inactive {
-                            color: #e74c3c;
-                            font-weight: bold;
-                        }
-                        .footer {
-                            margin-top: 30px;
-                            text-align: center;
-                            color: #7f8c8d;
-                            font-size: 12px;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>EduTrack - Course List</h1>
-                    <p><strong>Generated on:</strong> ${new Date().toLocaleString()}</p>
-                    <p><strong>Total Courses:</strong> ${courses.length}</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Course Code</th>
-                                <th>Course Name</th>
-                                <th>Teacher</th>
-                                <th>Duration</th>
-                                <th>Students</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-            `;
-            
-            courses.forEach(course => {
-                const statusClass = course.status === 'Active' ? 'active' : 'inactive';
-                html += `
-                    <tr>
-                        <td>${course.code}</td>
-                        <td>${course.name}</td>
-                        <td>${course.teacher}</td>
-                        <td>${course.duration}</td>
-                        <td>${course.students}</td>
-                        <td class="${statusClass}">${course.status}</td>
-                    </tr>
-                `;
-            });
-            
-            html += `
-                        </tbody>
-                    </table>
-                    <div class="footer">
-                        <p>&copy; 2025 EduTrack. All rights reserved.</p>
-                    </div>
-                </body>
-                </html>
-            `;
-            
-            printWindow.document.write(html);
-            printWindow.document.close();
-            
-            setTimeout(() => {
-                printWindow.print();
-            }, 250);
-        }
-
-        // Get course statistics
-        function getCourseStats() {
-            const totalCourses = courses.length;
-            const activeCourses = courses.filter(c => c.status === 'Active').length;
-            const inactiveCourses = courses.filter(c => c.status === 'Inactive').length;
-            const totalStudents = courses.reduce((sum, c) => sum + c.students, 0);
-            const avgStudents = totalCourses > 0 ? (totalStudents / totalCourses).toFixed(1) : 0;
-            
-            alert(`Course Statistics:\n\nTotal Courses: ${totalCourses}\nActive Courses: ${activeCourses}\nInactive Courses: ${inactiveCourses}\nTotal Students: ${totalStudents}\nAverage Students per Course: ${avgStudents}`);
-        }
-
-        // Validate before delete - check if course has students
-        function validateDelete(index) {
-            const course = courses[index];
-            
-            if (course.students > 0) {
-                const confirmMsg = `Warning: This course has ${course.students} enrolled students.\n\nAre you sure you want to delete "${course.name}"?\n\nThis action cannot be undone.`;
-                return confirm(confirmMsg);
-            }
-            
-            return confirm(`Are you sure you want to delete "${course.name}"?\n\nThis action cannot be undone.`);
-        }
-
-        // Update delete function to use validation
-        function deleteCourse(index) {
-            if (validateDelete(index)) {
-                courses.splice(index, 1);
-                renderCourses();
-                showAlert('Course deleted successfully!', 'success');
-            }
-        }
-
-        // Auto-save warning before leaving page
-        let hasUnsavedChanges = false;
-
-        // Mark form as dirty when changes are made
-        document.getElementById('courseForm').addEventListener('input', function() {
-            hasUnsavedChanges = true;
-        });
-
-        // Clear dirty flag on successful submit
-        document.getElementById('courseForm').addEventListener('submit', function() {
-            hasUnsavedChanges = false;
-        });
-
-        // Warn before leaving with unsaved changes
-        window.addEventListener('beforeunload', function(e) {
-            if (hasUnsavedChanges) {
-                const message = 'You have unsaved changes. Are you sure you want to leave?';
-                e.returnValue = message;
-                return message;
-            }
-        });
-
-        // Reset dirty flag when modal closes
-        const originalCloseModal = closeModal;
-        closeModal = function() {
-            if (hasUnsavedChanges) {
-                if (confirm('You have unsaved changes. Are you sure you want to close?')) {
-                    hasUnsavedChanges = false;
-                    originalCloseModal();
-                }
-            } else {
-                originalCloseModal();
-            }
-        };
-
-        // Additional validation helper - check for course name similarity
-        function checkSimilarCourseName(name) {
-            const similar = courses.filter(course => {
-                const similarity = calculateSimilarity(course.name.toLowerCase(), name.toLowerCase());
-                return similarity > 0.8 && course.name.toLowerCase() !== name.toLowerCase();
-            });
-            
-            if (similar.length > 0) {
-                const names = similar.map(c => c.name).join(', ');
-                return confirm(`Similar course names found: ${names}\n\nDo you want to continue?`);
-            }
-            
-            return true;
-        }
-
-        // Simple string similarity calculation
-        function calculateSimilarity(str1, str2) {
-            const longer = str1.length > str2.length ? str1 : str2;
-            const shorter = str1.length > str2.length ? str2 : str1;
-            
-            if (longer.length === 0) return 1.0;
-            
-            const editDistance = getEditDistance(longer, shorter);
-            return (longer.length - editDistance) / longer.length;
-        }
-
-        // Calculate edit distance between two strings
-        function getEditDistance(str1, str2) {
-            const matrix = [];
-            
-            for (let i = 0; i <= str2.length; i++) {
-                matrix[i] = [i];
-            }
-            
-            for (let j = 0; j <= str1.length; j++) {
-                matrix[0][j] = j;
-            }
-            
-            for (let i = 1; i <= str2.length; i++) {
-                for (let j = 1; j <= str1.length; j++) {
-                    if (str2.charAt(i - 1) === str1.charAt(j - 1)) {
-                        matrix[i][j] = matrix[i - 1][j - 1];
-                    } else {
-                        matrix[i][j] = Math.min(
-                            matrix[i - 1][j - 1] + 1,
-                            matrix[i][j - 1] + 1,
-                            matrix[i - 1][j] + 1
-                        );
-                    }
-                }
-            }
-            
-            return matrix[str2.length][str1.length];
-        }
-
-        // Initialize tooltips or help text
-        function initializeHelpText() {
-            const courseCode = document.getElementById('courseCode');
-            courseCode.title = 'Format: 3-4 letters followed by 3 digits (e.g., MATH101, ENG102)';
-            
-            const courseName = document.getElementById('courseName');
-            courseName.title = 'Enter the full name of the course';
-            
-            const courseStudents = document.getElementById('courseStudents');
-            courseStudents.title = 'Maximum 100 students per course';
-        }
-
-        // Call initialization
-        initializeHelpText();
-
-        // Log activity (optional - for debugging)
-        function logActivity(action, details) {
-            const timestamp = new Date().toISOString();
-            console.log(`[${timestamp}] ${action}:`, details);
-        }
-
-        // Override functions to include logging
-        const originalAddCourse = openAddModal;
-        openAddModal = function() {
-            logActivity('Open Add Modal', 'User opened add course form');
-            originalAddCourse();
-        };
-
-        console.log('Course Management System initialized successfully');
-        console.log(`Total courses loaded: ${courses.length}`);
     </script>
 </body>
 </html>
